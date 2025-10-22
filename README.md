@@ -1,150 +1,152 @@
-# Indian Sign Language Recognition System
+<div align="center">
 
-Millions of individuals with speech or hearing impairments rely on sign language for communication. Unfortunately, many people are not able to understand it—creating barriers in education, workplaces, healthcare, and in daily life.  
-This project aims to bridge that gap by capturing sign language gestures using sensors (or video) and translating them into text or speech in real time. Additionally, the system visualizes recognized gestures to aid learning and understanding.
+# 🤟 Sign Language Recognition System
 
----
-
-## 🎯 Features
-
-- Real‑time recognition of Indian Sign Language (ISL) gestures.  
-- Conversion of recognized gestures to text and/or speech output.  
-- Visualization of each gesture (for example, by showing the corresponding sign image/video).  
-- A modular architecture: data collection → model training → inference.  
-- Support for adding new gestures and customizing the vocabulary.
+Recognize hand gestures and translate them into text using **Python, OpenCV, MediaPipe, and Machine Learning**.  
+Empowering communication for everyone with the power of AI.
 
 ---
 
-## 📂 Repository Structure
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-Enabled-red?logo=opencv&logoColor=white)
+![MediaPipe](https://img.shields.io/badge/MediaPipe-Integrated-orange?logo=google&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-Used-yellow?logo=scikitlearn&logoColor=white)
+![License](https://img.shields.io/badge/License-Custom-purple?logo=open-source-initiative&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+![MadeWithLove](https://img.shields.io/badge/Built%20with-❤️-pink)
 
+</div>
+
+---
+
+## 🎯 Overview
+
+The **Sign Language Recognition System** is designed to recognize various hand gestures and translate them into corresponding letters or words.  
+This project utilizes **MediaPipe** for hand tracking and **Scikit-Learn** for training a static classifier model.
+
+---
+
+## ⚙️ Features
+
+- 🖐️ Capture new hand signs with labels for training
+- 🧠 Train a classification model on captured data
+- 📷 Real-time hand sign recognition via webcam
+- 💾 Save and reuse trained models
+
+---
+
+## 🧩 Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/madesh67/Sign_language_recognition_system.git
+
+# Navigate to the project directory
+cd Sign_language_recognition_system
+
+# Create a virtual environment (optional but recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install required dependencies
+pip install -r requirements.txt
 ```
-/
-├── data/                   # Raw and processed gesture data  
-├── models/                 # Trained models, checkpoints  
-├── reference_signs/        # Reference images/videos for each sign  
-├── sign languages/         # (Maybe) multiple sign‑language sets  
-├── src/                    # Source code for data processing, training, inference  
-└── README.md               # This file  
+
+**Required Packages:**
+```
+opencv-python
+mediapipe
+numpy
+scikit-learn
+joblib
 ```
 
 ---
 
-## 🛠 Getting Started
+## 🧠 Usage
 
-### Prerequisites
+### 1️⃣ Capture New Hand Signs
 
-- Python 3.7+  
-- Libraries: e.g., `numpy`, `opencv`, `tensorflow`/`pytorch`, `mediapipe` (or whatever you use)  
-- (Optional) GPU support for faster training and inference  
+Used to collect and label hand sign samples for training.
 
-### Installation & Setup
+```bash
+python capture.py --labels "A,B,C" --output data/samples.csv --samples-per-label 100
+```
 
-1. Clone the repository  
-   ```bash
-   git clone https://github.com/madesh67/Sign_language_recognition_system.git
-   cd Sign_language_recognition_system
-   ```
-2. (Optional) Create and activate a virtual environment  
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate     # On Windows: venv\Scripts\activate
-   ```
-3. Install required packages  
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Prepare your data  
-   - Place collected gesture images/videos in `data/`  
-   - Use `reference_signs/` to map labels to sign visuals  
-   - (Any preprocessing steps you provide)  
-5. Train the model  
-   ```bash
-   cd src
-   python train.py --data_dir ../data --model_dir ../models
-   ```
-6. Run inference  
-   ```bash
-   python infer.py --model ../models/latest_model.h5
-   ```
+**Arguments:**
 
-> ⚠️ Update the above commands to match your actual filenames & parameters.
+| Argument | Type | Default | Description |
+|-----------|------|----------|-------------|
+| `--labels-json` | str | "" | Path to labels.json |
+| `--labels` | str | "" | Comma-separated labels |
+| `--output` | str | "data/samples.csv" | Output CSV file |
+| `--samples-per-label` | int | 100 | Target samples per label |
+| `--camera` | int | 0 | Camera index |
+| `--mirror` | flag | False | Mirror preview |
+| `--min-det` | float | 0.6 | Minimum detection confidence |
+| `--min-trk` | float | 0.6 | Minimum tracking confidence |
+| `--save-references` | flag | False | Save reference images |
+| `--reference-dir` | str | "reference_signs" | Directory for reference images |
+| `--ref-interval` | int | 10 | Save reference every N captures |
 
 ---
 
-## 📐 Model & Algorithm
+### 2️⃣ Train the Model
 
-- The model uses (for example) a CNN or pose‐estimation pipeline (e.g., using MediaPipe) to extract hand/arm landmarks.  
-- The extracted features are then passed through a classifier (e.g., LSTM or fully‑connected network) to predict the sign label.  
-- The output is mapped to a text/speech action.  
-- The system architecture is modular, facilitating adding new gestures or training with more data.
+Used to train a classifier model from the captured samples.
 
----
+```bash
+python train.py
+```
 
-## 🧪 Usage & Demo
-
-- **Inference mode**: Run the webcam or video file to recognize gestures in real time.  
-- **Batch mode**: Process a folder of gesture images/videos and generate a report of recognized labels.  
-- **Visualization**: After recognition, the system displays the recognized sign’s reference image/video and the predicted label.  
-- **Speech output**: If speech module is enabled, the predicted label is spoken out using text‑to‑speech.
+After training, a model named **`isl_static_clf.joblib`** will be saved automatically.
 
 ---
 
-## ✅ Example Workflow
+### 3️⃣ Run the Application
 
-1. Collect images/videos of gestures corresponding to each label (e.g., "hello", "thank you", "yes", "no").  
-2. Organize into folders: `data/hello/`, `data/thank_you/`, etc.  
-3. Run preprocessing to extract hand/arm landmarks and save feature files.  
-4. Train the model with `train.py`.  
-5. Run `infer.py`, raise your hand with ‘hello’ sign → the system recognizes it, prints/texts “hello”, optionally says it out loud.  
+Recognize hand signs in real-time using your webcam.
 
----
+```bash
+python app.py
+```
 
-## 🚀 How to Contribute
-
-Thank you for your interest in contributing! Here’s how you can help:
-
-1. Fork the repository.  
-2. Create your feature branch:  
-   ```bash
-   git checkout ‑b feature/YourFeatureName
-   ```
-3. Commit your changes and push:  
-   ```bash
-   git commit ‑m "Add <feature>"
-   git push origin feature/YourFeatureName
-   ```
-4. Open a Pull Request and describe your changes clearly.  
-5. Ensure your code follows PEP8 (for Python) and includes tests if applicable.
-
-We welcome contributions such as:
-- Adding new gesture classes  
-- Improving model accuracy  
-- Adding new visualization or UI features  
-- Adding dataset‑augmentation pipelines  
-- Improving documentation  
+No command-line arguments are required — the webcam starts automatically and displays detected gestures.
 
 ---
 
-## 📝 License
+## 🧰 Project Structure
 
-This project is licensed under the **MIT License** (or whichever license you choose). See [LICENSE](LICENSE) file for details.
-
----
-
-## 🎓 Acknowledgements
-
-- Thanks to all those who helped collect and label the gesture data.  
-- Special mention to the authors of open‑source tools and libraries used: e.g., OpenCV, MediaPipe, TensorFlow/PyTorch.  
-- This project is inspired by the broader aim of improving accessibility for persons with hearing or speech impairments.
+The repository includes scripts for capturing data, training models, and running real-time recognition.  
+Refer to the GitHub directory view for the complete folder structure.
 
 ---
 
-## 🔍 Contact
+## 💡 How It Works
 
-Created by **@madesh67**.  
-Feel free to open an issue if you find bugs or have questions.  
-You may also reach me at: *<your_email@example.com>* (optional)
+1. **Capture Stage** – Collects labeled hand landmarks using MediaPipe.  
+2. **Training Stage** – Trains a Scikit-Learn classifier using the captured data.  
+3. **Recognition Stage** – Loads the trained model and recognizes gestures in real-time.  
 
 ---
 
-*Thank you for checking out this project — we hope it contributes to making communication more inclusive!*
+## 🧾 License
+
+This project is released under a **Custom License**.  
+You are free to use and modify it for educational and non-commercial purposes with proper credit to the author.
+
+---
+
+## 📬 Contact
+
+👤 **Author:** Madesh  
+📧 **Email:** madesh1367@gmail.com  
+🌐 **GitHub:** [madesh67](https://github.com/madesh67)
+
+---
+
+<div align="center">
+
+✨ *“Bridging communication barriers through AI and technology.”* ✨
+
+</div>
